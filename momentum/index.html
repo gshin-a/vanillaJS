@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div id="weather">
+      <span></span>
+      <span></span>
+    </div>
+    <div id="clock">
+      <h1>00:00:00</h1>
+    </div>
     <form id="login-form" class="hidden">
       <input
         required
@@ -15,21 +22,24 @@
       />
       <input type="submit" value="로그인" />
     </form>
-    <div id="clock">
-      <h1>00:00:00</h1>
-    </div>
     <h1 id="greeting" class="hidden"></h1>
+    <form id="todo-form">
+      <input
+        type="text"
+        placeholder="할일을 작성하고 Enter를 누르세요"
+        required
+      />
+    </form>
+    <ul id="todo-list"></ul>
     <div id="quote">
       <span></span>
       <span></span>
     </div>
-    <form class="js-toDoForm">
-      <input type="text" placeholder="할 일을 작성해주세요." />
-    </form>
-    <ul class="js-toDoList"></ul>
     <script src="login.js"></script>
     <script src="clock.js"></script>
     <script src="quotes.js"></script>
+    <script src="background.js"></script>
     <script src="todo.js"></script>
+    <script src="weather.js"></script>
   </body>
 </html>
