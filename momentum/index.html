@@ -3,22 +3,33 @@
   <head>
     <title>Document</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="js-clock">
-      <h1>00:00</h1>
-    </div>
-    <form class="js-form form">
-      <input type="text" placeholder="What is your name?" />
+    <form id="login-form" class="hidden">
+      <input
+        required
+        maxlength="15"
+        type="text"
+        placeholder="이름을 입력해주세요."
+      />
+      <input type="submit" value="로그인" />
     </form>
-    <h4 class="js-greetings greeting"></h4>
+    <div id="clock">
+      <h1>00:00:00</h1>
+    </div>
+    <h1 id="greeting" class="hidden"></h1>
+    <div id="quote">
+      <span></span>
+      <span></span>
+    </div>
     <form class="js-toDoForm">
-      <input type="text" placeholder="Write a to do" />
+      <input type="text" placeholder="할 일을 작성해주세요." />
     </form>
     <ul class="js-toDoList"></ul>
+    <script src="login.js"></script>
     <script src="clock.js"></script>
-    <script src="greeting.js"></script>
+    <script src="quotes.js"></script>
     <script src="todo.js"></script>
   </body>
 </html>
