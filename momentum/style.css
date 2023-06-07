@@ -1,3 +1,194 @@
 .hidden {
   display: none;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Cute Font", cursive;
+}
+
+#background {
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#container {
+  width: 1200px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+#left {
+  width: 100%;
+}
+
+#clock-container {
+  width: 500px;
+  height: 500px;
+  border: 10px black solid;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+
+#hour {
+  display: block;
+  content: "";
+  width: 120px;
+  height: 10px;
+  background-color: black;
+  position: absolute;
+  translate: 50%;
+  transform-origin: left;
+  z-index: 1;
+  border-radius: 5px;
+}
+
+#minute {
+  display: block;
+  content: "";
+  width: 170px;
+  height: 8px;
+  background-color: black;
+  position: absolute;
+  translate: 50%;
+  transform-origin: left;
+  z-index: 0;
+  border-radius: 5px;
+}
+
+#second {
+  display: block;
+  content: "";
+  width: 200px;
+  height: 5px;
+  background-color: black;
+  position: absolute;
+  translate: 50%;
+  transform-origin: left;
+  z-index: 0;
+  border-radius: 5px;
+}
+
+#weather {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#clock {
+  font-size: 30px;
+  font-weight: 900;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  padding: 20px;
+}
+
+#clock h1 {
+  font-size: 60px;
+  font-weight: 900;
+}
+
+#login-form input {
+  border: none;
+  height: 30px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+  outline: none;
+}
+
+#login-form #login-button {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+}
+
+#quote {
+  padding: 40px;
+  font-size: 30px;
+  font-weight: 600;
+  word-break: keep-all;
+}
+
+#quote span {
+  display: block;
+}
+
+#quote span:nth-child(1) {
+  font-style: italic;
+}
+
+#quote span:nth-child(2) {
+  margin-top: 20px;
+}
+
+#quote span:nth-child(2)::before {
+  content: "-";
+}
+
+#right {
+  width: calc(100% - 60px);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 30px;
+  padding: 30px;
+}
+
+#todo-form input {
+  border: 5px black dotted;
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  border-radius: 5px;
+  background-color: transparent;
+  font-size: 20px;
+  font-weight: bold;
+  outline: none;
+}
+
+#todo-list {
+  width: 100%;
+  font-size: 30px;
+  padding: 0;
+}
+
+#todo-list li {
+  display: flex;
+  justify-content: space-between;
+}
+
+#todo-list li::before {
+  content: "💌";
+  margin-right: 10px;
+}
+
+#todo-list span {
+  display: block;
+  flex-grow: 1;
+}
+
+#todo-list button {
+  background-color: transparent;
+  cursor: pointer;
+  border-width: 3px;
+  border-radius: 5px;
+  margin: 5px;
+}
