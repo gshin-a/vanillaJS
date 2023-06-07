@@ -129,6 +129,11 @@ body {
   font-weight: bold;
 }
 
+#greeting {
+  position: absolute;
+  top: 400px;
+}
+
 #quote {
   padding: 40px;
   font-size: 30px;
