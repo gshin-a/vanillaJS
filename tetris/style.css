@@ -1,4 +1,4 @@
-#item.active {
+.item.active {
   background-color: black;
 }
 
@@ -21,7 +21,7 @@ body {
   height: 500px;
 }
 
-#item {
+.item {
   width: 20px;
   height: 20px;
   margin-right: 5px;
