@@ -3,12 +3,12 @@ const gameView = document.querySelector("#game-view");
 let blockList = Array(240).fill(0);
 const blockType = {
   0: [5, 6, 7, 8],
-  1: [17, 18, 19, 6],
-  2: [17, 18, 6, 7],
-  3: [17, 18, 5, 6],
-  4: [17, 18, 19, 7],
-  5: [17, 18, 19, 5],
-  6: [18, 19, 5, 6],
+  1: [6, 17, 18, 19],
+  2: [6, 7, 17, 18],
+  3: [5, 6, 17, 18],
+  4: [7, 17, 18, 19],
+  5: [5, 17, 18, 19],
+  6: [5, 6, 18, 19],
 };
 let activeBlock = blockType[Math.floor(Math.random() * 7)];
 let filledBlock = [];
@@ -101,6 +101,37 @@ function clearRow() {
   }
 }
 
+function rotateBlock() {
+  const rotatedActiveBlock = [];
+  let disable = 0;
+  const base = activeBlock[2];
+  activeBlock.forEach((e, i) => {
+    let dist = base - e;
+    // 좌우간 거리
+    let horDist = dist;
+    // 상하간 거리
+    let perDist = 0;
+    while (horDist > 3 || horDist < -3) {
+      if (horDist > 0) {
+        perDist++;
+        horDist -= 12;
+      } else {
+        perDist--;
+        horDist += 12;
+      }
+    }
+
+    let rotation = activeBlock[i] + (-11 * horDist + 13 * perDist);
+    if (rotation < 0 || rotation > 239) {
+      disable = 1;
+    }
+    rotatedActiveBlock.push(rotation);
+  });
+  if (!disable) {
+    activeBlock = JSON.parse(JSON.stringify(rotatedActiveBlock));
+  }
+}
+
 // 방향키 event
 function keyDownHandler(e) {
   if (e.key === 37 || e.key === "ArrowRight") {
@@ -118,9 +149,7 @@ function keyDownHandler(e) {
       }
     }
   } else if (e.key === 38 || e.key === "ArrowUp") {
-    for (let i = 0; i < activeBlock.length; i++) {
-      activeBlock[i] -= 12;
-    }
+    rotateBlock();
   } else if (e.key === 40 || e.key === "ArrowDown") {
     if (validate("down")) {
       switchActiveBlock();
