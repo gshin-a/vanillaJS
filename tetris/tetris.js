@@ -2,15 +2,16 @@ const gameView = document.querySelector("#game-view");
 const scoreView = document.querySelector("#score div:nth-child(2)");
 const levelView = document.querySelector("#level div:nth-child(2)");
 
+let interval = null;
 let blockList = Array(240).fill(0);
 const blockType = {
   0: [5, 6, 7, 8],
-  1: [6, 17, 18, 19],
-  2: [6, 7, 17, 18],
-  3: [5, 6, 17, 18],
-  4: [7, 17, 18, 19],
-  5: [5, 17, 18, 19],
-  6: [5, 6, 18, 19],
+  1: [-6, 5, 6, 7],
+  2: [-6, -5, 5, 6],
+  3: [-7, -6, 5, 6],
+  4: [-5, 5, 6, 7],
+  5: [-7, 5, 6, 7],
+  6: [-7, -6, 6, 7],
 };
 let activeBlock = blockType[Math.floor(Math.random() * 7)];
 let filledBlock = [];
@@ -40,8 +41,10 @@ function renderActiveBlock() {
   });
 
   activeBlock.forEach((e) => {
-    let item = document.querySelector(`#item${e}`);
-    if (!item.classList.contains("active")) item.classList.add("active");
+    if (e >= 0) {
+      let item = document.querySelector(`#item${e}`);
+      if (!item.classList.contains("active")) item.classList.add("active");
+    }
   });
 }
 
@@ -93,7 +96,7 @@ function switchActiveBlock() {
 function addScore() {
   score += 10;
   scoreView.innerText = score;
-  level = Math.floor(score / 50) + 1;
+  level = Math.floor(score / 30) + 1;
   levelView.innerText = level;
   clearInterval(interval);
 
@@ -201,16 +204,32 @@ function keyDownHandler(e) {
   renderActiveBlock();
 }
 
-let interval = null;
+function restart() {
+  gameView.innerHTML = "";
+  blockList = JSON.parse(JSON.stringify(Array(240).fill(0)));
+  score = 0;
+  level = 1;
+  init();
+}
+
+function gameOver() {
+  clearInterval(interval);
+  alert(`게임종료. 점수: ${score}, 레벨: ${level}`);
+  if (confirm("게임을 다시 시작하시겠습니까?")) restart();
+}
 
 function init() {
   startGame();
   renderActiveBlock();
   interval = setInterval(() => {
     if (validate("down")) {
-      switchActiveBlock();
-      clearRow();
-      renderActiveBlock();
+      activeBlock.sort((a, b) => a - b);
+      if (activeBlock[activeBlock.length - 1] < 12) gameOver();
+      else {
+        switchActiveBlock();
+        clearRow();
+        renderActiveBlock();
+      }
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
