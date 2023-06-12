@@ -5,6 +5,7 @@ const startButton = document.querySelector("#button button:first-child");
 const stopButton = document.querySelector("#button button:nth-child(2)");
 const restartButton = document.querySelector("#button button:nth-child(3)");
 const endButton = document.querySelector("#button button:last-child");
+const bestScoreView = document.querySelector("#best-score div:last-child");
 
 let interval = null;
 let blockList = Array(240).fill(0);
@@ -23,6 +24,7 @@ let validation = Array(240).fill(0);
 let score = 0;
 let level = 1;
 let isOver = 0;
+let bestScore = 0;
 
 // 초기 게임 화면 세팅
 function setView() {
@@ -47,6 +49,8 @@ function setView() {
   });
   scoreView.innerText = score;
   levelView.innerText = level;
+  bestScore = localStorage.getItem("bestScore");
+  if (bestScore) bestScoreView.innerHTML = bestScore;
 }
 
 // acitiveBlock 보여줌
@@ -236,6 +240,11 @@ function keyDownHandler(e) {
 function gameOver() {
   clearInterval(interval);
   document.removeEventListener("keydown", keyDownHandler);
+  if (bestScore < score) {
+    alert("최고점수를 달성하셨습니다!");
+    localStorage.setItem("bestScore", score);
+    bestScoreView.innerHTML = bestScore;
+  }
   alert(`게임종료. 점수: ${score}, 레벨: ${level}`);
   setView();
   if (confirm("게임을 다시 시작하시겠습니까?")) init();
