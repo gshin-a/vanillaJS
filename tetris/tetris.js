@@ -114,6 +114,7 @@ function renderGameView() {
       document.querySelector(`#item${i}`).classList.remove(`active${j}`);
     }
   });
+
   blockList.forEach((e, i) => {
     if (e >= 0) document.querySelector(`#item${i}`).classList.add(`active${e}`);
   });
@@ -208,6 +209,21 @@ function rotateBlock() {
     }
 
     let rotation = activeBlock[i] + (-11 * horDist + 13 * perDist);
+
+    // base로부터 벽까지의 거리
+    // rotation과 base의 거리가 이 값보다 크면 rotation은 벽을 넘어갔다고 판단하여 rotate를 하지 않음
+    let limit = base % 12 >= 6 ? (base % 12) - 11 : base % 12;
+    let distRotation = base - rotation;
+    while (distRotation > 3 || distRotation < -3) {
+      if (distRotation > 0) {
+        distRotation -= 12;
+      } else {
+        distRotation += 12;
+      }
+    }
+    if (Math.abs(distRotation) > Math.abs(limit)) {
+      disable = 1;
+    }
 
     if (rotation < 0 || rotation > 239) {
       disable = 1;
