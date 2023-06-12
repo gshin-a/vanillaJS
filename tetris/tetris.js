@@ -7,8 +7,6 @@ const restartButton = document.querySelector("#button button:nth-child(3)");
 const endButton = document.querySelector("#button button:last-child");
 const bestScoreView = document.querySelector("#best-score div:last-child");
 
-let interval = null;
-let blockList = Array(240).fill(0);
 const blockType = {
   0: [5, 6, 7, 8],
   1: [-6, 5, 6, 7],
@@ -18,7 +16,10 @@ const blockType = {
   5: [-7, 5, 6, 7],
   6: [-7, -6, 6, 7],
 };
-let activeBlock = blockType[Math.floor(Math.random() * 7)];
+let interval = null;
+let blockList = Array(240).fill(-1);
+let colorNum = Math.floor(Math.random() * 7);
+let activeBlock = blockType[colorNum];
 let filledBlock = [];
 let validation = Array(240).fill(0);
 let score = 0;
@@ -32,10 +33,9 @@ function setView() {
   stopButton.classList.add("hidden");
   restartButton.classList.add("hidden");
   endButton.classList.add("hidden");
-  activeBlock = JSON.parse(
-    JSON.stringify(blockType[Math.floor(Math.random() * 7)])
-  );
-  blockList = JSON.parse(JSON.stringify(Array(240).fill(0)));
+  colorNum = Math.floor(Math.random() * 7);
+  activeBlock = JSON.parse(JSON.stringify(blockType[colorNum]));
+  blockList = JSON.parse(JSON.stringify(Array(240).fill(-1)));
   filledBlock = JSON.parse(JSON.stringify([]));
   validation = JSON.parse(JSON.stringify(Array(240).fill(0)));
   score = 0;
@@ -57,14 +57,22 @@ function setView() {
 function renderActiveBlock() {
   blockList.forEach((e, i) => {
     let item = document.querySelector(`#item${i}`);
-    if (e === 0 && item.classList.contains("active"))
-      item.classList.remove("active");
+    for (let i = 0; i < 7; i++) {
+      if (e === -1 && item.classList.contains(`active${i}`))
+        item.classList.remove(`active${i}`);
+    }
   });
 
   activeBlock.forEach((e) => {
     if (e >= 0) {
       let item = document.querySelector(`#item${e}`);
-      if (!item.classList.contains("active")) item.classList.add("active");
+      let isActive = 0;
+      for (let i = 0; i < 7; i++) {
+        if (item.classList.contains(`active${i}`)) {
+          isActive++;
+        }
+      }
+      if (isActive === 0) item.classList.add(`active${colorNum}`);
     }
   });
 }
@@ -77,21 +85,22 @@ function validate(type, rotatedActiveBlock) {
   switch (type) {
     case "left":
       activeBlock.forEach(
-        (e) => (isFloor += e % 12 === 0 || blockList[e - 1] === 1)
+        (e) => (isFloor += e % 12 === 0 || blockList[e - 1] !== -1)
       );
       break;
     case "right":
       activeBlock.forEach(
-        (e) => (isFloor += e % 12 === 11 || blockList[e + 1] === 1)
+        (e) => (isFloor += e % 12 === 11 || blockList[e + 1] !== -1)
       );
       break;
     case "down":
       activeBlock.forEach(
-        (e) => (isFloor += Math.floor(e / 12) === 19 || blockList[e + 12] === 1)
+        (e) =>
+          (isFloor += Math.floor(e / 12) === 19 || blockList[e + 12] !== -1)
       );
       break;
     case "rotate":
-      rotatedActiveBlock.forEach((e) => (isFloor += blockList[e] === 1));
+      rotatedActiveBlock.forEach((e) => (isFloor += blockList[e] !== -1));
       break;
   }
 
@@ -99,18 +108,24 @@ function validate(type, rotatedActiveBlock) {
 }
 
 function renderGameView() {
+  // 기존 active클래스 제거
   blockList.forEach((e, i) => {
-    if (e === 1) document.querySelector(`#item${i}`).classList.add("active");
+    for (let j = 0; j < 7; j++) {
+      document.querySelector(`#item${i}`).classList.remove(`active${j}`);
+    }
+  });
+  blockList.forEach((e, i) => {
+    if (e >= 0) document.querySelector(`#item${i}`).classList.add(`active${e}`);
   });
 }
 
 // activeBlock이 아래로 이동할 수 없으면 activeBlock을 blockList에 저장하고 다음 activeBlock 생성
 // 게임 화면 재렌더링
 function switchActiveBlock() {
-  activeBlock.forEach((e) => (blockList[e] = 1));
-  activeBlock = JSON.parse(
-    JSON.stringify(blockType[Math.floor(Math.random() * 7)])
-  );
+  activeBlock.forEach((e) => console.log(activeBlock, blockList[e]));
+  activeBlock.forEach((e) => (blockList[e] = colorNum));
+  colorNum = Math.floor(Math.random() * 7);
+  activeBlock = JSON.parse(JSON.stringify(blockType[colorNum]));
   renderGameView();
 }
 
@@ -149,7 +164,7 @@ function addScore() {
 function clearRow() {
   const sumRows = Array(20).fill(0);
   blockList.forEach((e, i) => {
-    sumRows[Math.floor(i / 12)] += e;
+    if (e >= 0) sumRows[Math.floor(i / 12)]++;
   });
 
   let clearRows = [];
@@ -164,9 +179,8 @@ function clearRow() {
     clearRows.forEach((e) => {
       blockList.splice(e * 12, 12);
     });
-    const newRow = Array(12).fill(0);
     for (let i = 0; i < clearRows.length; i++) {
-      blockList.unshift(...newRow);
+      blockList.unshift(...Array(12).fill(-1));
     }
     clearRows.forEach((e) => {
       addScore();

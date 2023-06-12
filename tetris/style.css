@@ -1,5 +1,23 @@
-.item.active {
-  background-color: black;
+.item.active0 {
+  background-color: #ff0000;
+}
+.item.active1 {
+  background-color: #964b00;
+}
+.item.active2 {
+  background-color: #81c147;
+}
+.item.active3 {
+  background-color: #0067a3;
+}
+.item.active4 {
+  background-color: #ffffff;
+}
+.item.active5 {
+  background-color: #ff00ff;
+}
+.item.active6 {
+  background-color: #50bcdf;
 }
 
 body {
@@ -17,16 +35,14 @@ body {
 #game-view {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  width: 300px;
-  height: 500px;
+  width: 240px;
+  height: 400px;
 }
 
 .item {
   width: 20px;
   height: 20px;
-  margin-right: 5px;
-  margin-top: 5px;
-  background-color: white;
+  background-color: black;
   border: 1px black solid;
   box-sizing: border-box;
 }
