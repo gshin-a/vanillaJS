@@ -22,6 +22,7 @@ let filledBlock = [];
 let validation = Array(240).fill(0);
 let score = 0;
 let level = 1;
+let isOver = 0;
 
 // 초기 게임 화면 세팅
 function setView() {
@@ -44,7 +45,6 @@ function setView() {
     item.classList.add("item");
     gameView.appendChild(item);
   });
-
   scoreView.innerText = score;
   levelView.innerText = level;
 }
@@ -115,21 +115,31 @@ function addScore() {
   scoreView.innerText = score;
   level = Math.floor(score / 30) + 1;
   levelView.innerText = level;
-  clearInterval(interval);
+  if (level === 20) {
+    alert("게임승리! 20레벨을 달성하셨습니다.");
+    gameOver();
+    isOver = 1;
+  } else {
+    clearInterval(interval);
 
-  interval = setInterval(() => {
-    if (validate("down")) {
-      switchActiveBlock();
-      clearRow();
-      renderActiveBlock();
-    } else {
-      for (let i = 0; i < activeBlock.length; i++) {
-        activeBlock[i] += 12;
+    interval = setInterval(() => {
+      if (validate("down")) {
+        activeBlock.sort((a, b) => a - b);
+        if (activeBlock[activeBlock.length - 1] < 12) gameOver();
+        else {
+          switchActiveBlock();
+          clearRow();
+          if (!isOver) renderActiveBlock();
+        }
+      } else {
+        for (let i = 0; i < activeBlock.length; i++) {
+          activeBlock[i] += 12;
+        }
+        clearRow();
+        if (!isOver) renderActiveBlock();
       }
-      clearRow();
-      renderActiveBlock();
-    }
-  }, 1000 - (level - 1) * 50);
+    }, 1000 - (level - 1) * 50);
+  }
 }
 
 function clearRow() {
@@ -149,12 +159,14 @@ function clearRow() {
     clearRows.sort((a, b) => b - a);
     clearRows.forEach((e) => {
       blockList.splice(e * 12, 12);
-      addScore();
     });
     const newRow = Array(12).fill(0);
     for (let i = 0; i < clearRows.length; i++) {
       blockList.unshift(...newRow);
     }
+    clearRows.forEach((e) => {
+      addScore();
+    });
   }
 }
 
@@ -218,7 +230,7 @@ function keyDownHandler(e) {
     }
   }
   clearRow();
-  renderActiveBlock();
+  if (!isOver) renderActiveBlock();
 }
 
 function gameOver() {
@@ -242,20 +254,25 @@ function restartGame() {
   document.addEventListener("keydown", keyDownHandler);
   interval = setInterval(() => {
     if (validate("down")) {
-      switchActiveBlock();
-      clearRow();
-      renderActiveBlock();
+      activeBlock.sort((a, b) => a - b);
+      if (activeBlock[activeBlock.length - 1] < 12) gameOver();
+      else {
+        switchActiveBlock();
+        clearRow();
+        if (!isOver) renderActiveBlock();
+      }
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
       }
       clearRow();
-      renderActiveBlock();
+      if (!isOver) renderActiveBlock();
     }
   }, 1000 - (level - 1) * 50);
 }
 
 function init() {
+  isOver = 0;
   document.addEventListener("keydown", keyDownHandler);
   startButton.classList.add("hidden");
   stopButton.classList.remove("hidden");
@@ -268,14 +285,14 @@ function init() {
       else {
         switchActiveBlock();
         clearRow();
-        renderActiveBlock();
+        if (!isOver) renderActiveBlock();
       }
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
       }
       clearRow();
-      renderActiveBlock();
+      if (!isOver) renderActiveBlock();
     }
   }, 1000);
 }
