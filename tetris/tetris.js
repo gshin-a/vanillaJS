@@ -1,6 +1,10 @@
 const gameView = document.querySelector("#game-view");
 const scoreView = document.querySelector("#score div:nth-child(2)");
 const levelView = document.querySelector("#level div:nth-child(2)");
+const startButton = document.querySelector("#button button:first-child");
+const stopButton = document.querySelector("#button button:nth-child(2)");
+const restartButton = document.querySelector("#button button:nth-child(3)");
+const endButton = document.querySelector("#button button:last-child");
 
 let interval = null;
 let blockList = Array(240).fill(0);
@@ -20,7 +24,20 @@ let score = 0;
 let level = 1;
 
 // 초기 게임 화면 세팅
-function startGame() {
+function setView() {
+  startButton.classList.remove("hidden");
+  stopButton.classList.add("hidden");
+  restartButton.classList.add("hidden");
+  endButton.classList.add("hidden");
+  activeBlock = JSON.parse(
+    JSON.stringify(blockType[Math.floor(Math.random() * 7)])
+  );
+  blockList = JSON.parse(JSON.stringify(Array(240).fill(0)));
+  filledBlock = JSON.parse(JSON.stringify([]));
+  validation = JSON.parse(JSON.stringify(Array(240).fill(0)));
+  score = 0;
+  level = 1;
+  gameView.innerHTML = "";
   blockList.forEach((e, i) => {
     let item = document.createElement("div");
     item.id = `item${i}`;
@@ -204,22 +221,45 @@ function keyDownHandler(e) {
   renderActiveBlock();
 }
 
-function restart() {
-  gameView.innerHTML = "";
-  blockList = JSON.parse(JSON.stringify(Array(240).fill(0)));
-  score = 0;
-  level = 1;
-  init();
-}
-
 function gameOver() {
   clearInterval(interval);
+  document.removeEventListener("keydown", keyDownHandler);
   alert(`게임종료. 점수: ${score}, 레벨: ${level}`);
-  if (confirm("게임을 다시 시작하시겠습니까?")) restart();
+  setView();
+  if (confirm("게임을 다시 시작하시겠습니까?")) init();
+}
+
+function stopGame() {
+  restartButton.classList.remove("hidden");
+  stopButton.classList.add("hidden");
+  document.removeEventListener("keydown", keyDownHandler);
+  clearInterval(interval);
+}
+
+function restartGame() {
+  stopButton.classList.remove("hidden");
+  restartButton.classList.add("hidden");
+  document.addEventListener("keydown", keyDownHandler);
+  interval = setInterval(() => {
+    if (validate("down")) {
+      switchActiveBlock();
+      clearRow();
+      renderActiveBlock();
+    } else {
+      for (let i = 0; i < activeBlock.length; i++) {
+        activeBlock[i] += 12;
+      }
+      clearRow();
+      renderActiveBlock();
+    }
+  }, 1000 - (level - 1) * 50);
 }
 
 function init() {
-  startGame();
+  document.addEventListener("keydown", keyDownHandler);
+  startButton.classList.add("hidden");
+  stopButton.classList.remove("hidden");
+  endButton.classList.remove("hidden");
   renderActiveBlock();
   interval = setInterval(() => {
     if (validate("down")) {
@@ -240,6 +280,9 @@ function init() {
   }, 1000);
 }
 
-document.addEventListener("keydown", keyDownHandler);
+startButton.addEventListener("click", init);
+stopButton.addEventListener("click", stopGame);
+restartButton.addEventListener("click", restartGame);
+endButton.addEventListener("click", gameOver);
 
-init();
+setView();
