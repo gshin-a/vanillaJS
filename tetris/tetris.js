@@ -122,7 +122,6 @@ function renderGameView() {
 // activeBlock이 아래로 이동할 수 없으면 activeBlock을 blockList에 저장하고 다음 activeBlock 생성
 // 게임 화면 재렌더링
 function switchActiveBlock() {
-  activeBlock.forEach((e) => console.log(activeBlock, blockList[e]));
   activeBlock.forEach((e) => (blockList[e] = colorNum));
   colorNum = Math.floor(Math.random() * 7);
   activeBlock = JSON.parse(JSON.stringify(blockType[colorNum]));
