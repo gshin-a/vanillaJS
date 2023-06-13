@@ -3,9 +3,10 @@
 - 완료
     1. momentum 
         > 배포링크: https://gshin-a.github.io/vanillaJS/momentum/
+    2. 테트리스
+        > 배포링크: https://gshin-a.github.io/vanillaJS/tetris
 
 - 진행중
-    1. 테트리스
 
 - 진행예정
     1. 지뢰찾기
