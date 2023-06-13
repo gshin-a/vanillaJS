@@ -1,11 +1,11 @@
 const gameView = document.querySelector("#game-view");
-const scoreView = document.querySelector("#score div:nth-child(2)");
-const levelView = document.querySelector("#level div:nth-child(2)");
+const scoreView = document.querySelector("#score p:nth-child(2)");
+const levelView = document.querySelector("#level p:nth-child(2)");
+const bestScoreView = document.querySelector("#best-score p:last-child");
 const startButton = document.querySelector("#button button:first-child");
 const stopButton = document.querySelector("#button button:nth-child(2)");
 const restartButton = document.querySelector("#button button:nth-child(3)");
 const endButton = document.querySelector("#button button:last-child");
-const bestScoreView = document.querySelector("#best-score div:last-child");
 
 const blockType = {
   0: [5, 6, 7, 8],
