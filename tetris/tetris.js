@@ -62,7 +62,6 @@ function renderActiveBlock() {
         item.classList.remove(`active${i}`);
     }
   });
-
   activeBlock.forEach((e) => {
     if (e >= 0) {
       let item = document.querySelector(`#item${e}`);
@@ -110,8 +109,9 @@ function validate(type, rotatedActiveBlock) {
 function renderGameView() {
   // 기존 active클래스 제거
   blockList.forEach((e, i) => {
-    for (let j = 0; j < 7; j++) {
-      document.querySelector(`#item${i}`).classList.remove(`active${j}`);
+    let item = document.querySelector(`#item${i}`);
+    if (item.className.includes("active")) {
+      document.querySelector(`#item${i}`).className = "item";
     }
   });
 
@@ -126,7 +126,6 @@ function switchActiveBlock() {
   activeBlock.forEach((e) => (blockList[e] = colorNum));
   colorNum = Math.floor(Math.random() * 7);
   activeBlock = JSON.parse(JSON.stringify(blockType[colorNum]));
-  renderGameView();
 }
 
 function addScore() {
@@ -149,12 +148,12 @@ function addScore() {
           switchActiveBlock();
           clearRow();
           if (!isOver) renderActiveBlock();
+          renderGameView();
         }
       } else {
         for (let i = 0; i < activeBlock.length; i++) {
           activeBlock[i] += 12;
         }
-        clearRow();
         if (!isOver) renderActiveBlock();
       }
     }, 1000 - (level - 1) * 50);
@@ -256,13 +255,15 @@ function keyDownHandler(e) {
   } else if (e.key === 40 || e.key === "ArrowDown") {
     if (validate("down")) {
       switchActiveBlock();
+      clearRow();
+      renderGameView();
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
       }
     }
   }
-  clearRow();
+
   if (!isOver) renderActiveBlock();
 }
 
@@ -298,12 +299,12 @@ function restartGame() {
         switchActiveBlock();
         clearRow();
         if (!isOver) renderActiveBlock();
+        renderGameView();
       }
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
       }
-      clearRow();
       if (!isOver) renderActiveBlock();
     }
   }, 1000 - (level - 1) * 50);
@@ -324,12 +325,12 @@ function init() {
         switchActiveBlock();
         clearRow();
         if (!isOver) renderActiveBlock();
+        renderGameView();
       }
     } else {
       for (let i = 0; i < activeBlock.length; i++) {
         activeBlock[i] += 12;
       }
-      clearRow();
       if (!isOver) renderActiveBlock();
     }
   }, 1000);
